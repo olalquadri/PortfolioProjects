@@ -43,7 +43,7 @@ where continent is not null
 -- where location like '%Canada%'
 order by 1,2
 
--- Looking at country with highest ib=nfection rate to population  
+-- Looking at country with highest infection rate to population  
 
 Select Location, population, MAX(total_cases) as HighestInfectionCount, MAX((total_cases/population))*100 as PercentagePopulationInfected
 From PortfolioProject..CovidDeaths
@@ -141,7 +141,7 @@ Join PortfolioProject..CovidVaccinations vac
 	and dea.date = vac.date
 
 
--- Lookinf at total population versus vaccination 
+-- Looking at total population versus vaccinations
 
 Select dea.continent, dea.location,dea.date, vac.new_vaccinations
 From PortfolioProject..CovidDeaths dea
@@ -151,7 +151,7 @@ Join PortfolioProject..CovidVaccinations vac
 where dea.continent is not null
 order by 2,3
 
--- Looking at total population versus vaccination rolling counts
+-- Looking at total population versus vaccinations rolling counts
 
 /*
 Challenge 3 = query result for large data type 
@@ -169,7 +169,7 @@ where dea.continent is not null
 order by 2,3 
 
 
--- Looking at total population versus vaccination rolling counts
+-- Looking at total population versus vaccinations rolling counts
 -- using CTE
 
 with PopvsVac (Continent, Location, date, Population, new_vaccinations, RollingPeopleVac)
@@ -215,15 +215,17 @@ from #PercentPopulationVac
 
 
 -- Creating VIEWS
+-- for data visualization 
 
 Create view PercentPopulationVac as
 Select dea.continent, dea.location,dea.date, dea.population, vac.new_vaccinations, 
-Sum (Convert(bigint, vac.new_vaccinations)) over (partition by dea.location Order by dea.location,dea.date)as RollingPeopleVac
+Sum (Convert(bigint, vac.new_vaccinations)) over (partition by dea.location Order by dea.location,dea.date) as RollingPeopleVac
 From PortfolioProject..CovidDeaths dea
 Join PortfolioProject..CovidVaccinations vac
 	on dea.location = vac.location
 	and dea.date = vac.date
 where dea.continent is not null
+--order by 2,3 
 
 Select * 
 From PercentPopulationVac
