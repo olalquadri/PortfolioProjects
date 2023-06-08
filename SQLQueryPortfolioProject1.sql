@@ -227,3 +227,14 @@ where dea.continent is not null
 
 Select * 
 From PercentPopulationVac
+
+
+Create view TotalGlobalDeathCount as
+Select continent, MAX(cast(total_deaths as int)) as TotalDeathCount
+From PortfolioProject..CovidDeaths
+where continent is not null
+group by continent
+--order by TotalDeathCount desc
+
+Select * 
+From TotalGlobalDeathCount
